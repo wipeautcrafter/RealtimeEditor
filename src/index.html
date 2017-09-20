@@ -1,0 +1,135 @@
+<html>
+	<head>
+		<title>RealtimeEditor</title>
+		<script src="/socket.io/socket.io.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+	</head>
+	<body>
+		<textarea class="lighttheme" spellcheck="false" onkeyup="edit(event)" onkeydown="keydown(event)" id="code">// code here</textarea>
+		<div id="break"></div>
+		<div id="preferences" class="lighttheme">
+			<button onclick="darkTheme()" id="darkButton">Dark Theme</button>
+			<button onclick="lightTheme()" id="lightButton">Light Theme</button>
+			<button onclick="fontSize(1)" id="darkButton">&plus;</button>
+			<button onclick="fontSize(-1)" id="lightButton">&minus;</button>
+		</div>
+	</body>
+	<style>
+		#darkButton {
+			font-family: 'Abel', sans-serif;
+			color: white;
+			font-size: 200%;
+			height: 100%;
+			width: 24.7%;
+			background: -webkit-linear-gradient(left, #919191, #666666);
+			border: 1px solid black;
+		}
+		#lightButton {
+			font-family: 'Abel', sans-serif;
+			color: black;
+			font-size: 200%;
+			height: 100%;
+			width: 24.7%;
+			background: -webkit-linear-gradient(left, #f4f4f4, #d1d1d1);
+			border: 1px solid black;
+		}
+		#toggletheme:hover {
+			animation-name: invert;
+    		animation-duration: 1s;
+		}
+		#break {
+			height: 2%;
+			width: 0%;
+		}
+		#code {
+			width: 100%;
+			height: 86%;
+			font-size: 17px;
+			outline: none !important;
+			font-family: 'Abel', sans-serif;
+			resize: none;
+		}
+		.lighttheme {
+			background-color: #f4f4f4;
+			border: 5px solid #d1d1d1;
+			color: black;
+		}
+		.darktheme {
+			background-color: #666666;
+			border: 5px solid #919191;
+			color: white;
+		}
+		#preferences {
+			width: 99%;
+			height: 10%;
+			font-family: 'Abel', sans-serif;
+		}
+		body {
+			background-color: #ede4e1;
+		}
+	</style>
+	<script>
+		var socket = io();
+		var fontsize = 17;
+
+		function edit(e) {
+			socket.emit('edit', document.getElementById("code").value);
+		}
+
+		function keydown(e) {
+			var keyCode = e.keyCode || e.which; 
+
+  			if (keyCode == 9) {
+ 				var start = e.target.selectionStart,
+        			end = e.target.selectionEnd;
+
+        		var val = e.target.value.splice(start, 0, " ");
+        		e.target.value = val;
+
+        		e.target.setSelectionRange(start+1, end+1);
+  				e.preventDefault();
+  			} 
+		} 
+
+		socket.on('edit', function(value) {
+			var el = document.getElementById("code");
+ 			var start = el.selectionStart,
+        		end = el.selectionEnd;
+      		el.value = value;
+      		el.setSelectionRange(start, end);
+    	});
+
+    	String.prototype.splice = function(idx, rem, str) {
+    		return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+		};
+
+		function darkTheme() {
+			forEachClassName("lighttheme", (items) => {
+				items.forEach(item => {
+					item.className = "darktheme";
+				});
+			});
+		}
+		function lightTheme() {
+			forEachClassName("darktheme", (items) => {
+				items.forEach(item => {
+					item.className = "lighttheme";
+				});
+			});
+		}
+		function fontSize(amount) {
+			console.log(fontsize);
+			fontsize += amount;
+			document.getElementById("code").style.fontSize = fontsize;
+		}
+
+		function forEachClassName(className, recall) {
+			var items = document.getElementsByClassName(className);
+			var allItems = [];
+            for(var i=0; i<items.length; i++) {
+                allItems.push(items[i]);
+            }
+            recall(allItems);
+		}
+	</script>
+</html>

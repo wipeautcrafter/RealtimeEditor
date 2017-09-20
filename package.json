@@ -1,0 +1,16 @@
+{
+  "name": "realtime-editor",
+  "version": "1.0.0",
+  "description": "a realtime code editor",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wipeautcrafter",
+  "license": "ISC"
+}
