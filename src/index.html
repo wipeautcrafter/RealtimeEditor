@@ -20,7 +20,7 @@
 			color: white;
 			font-size: 200%;
 			height: 100%;
-			width: 24.6%;
+			width: 24.7%;
 			background: -webkit-linear-gradient(left, #919191, #666666);
 			border: 1px solid black;
 		}
@@ -29,9 +29,13 @@
 			color: black;
 			font-size: 200%;
 			height: 100%;
-			width: 24.6%;
+			width: 24.7%;
 			background: -webkit-linear-gradient(left, #f4f4f4, #d1d1d1);
 			border: 1px solid black;
+		}
+		#toggletheme:hover {
+			animation-name: invert;
+    		animation-duration: 1s;
 		}
 		#break {
 			height: 2%;
@@ -88,11 +92,13 @@
 		} 
 
 		socket.on('edit', function(value) {
-			var el = document.getElementById("code");
- 			var start = el.selectionStart,
-        		end = el.selectionEnd;
-      		el.value = value;
-      		el.setSelectionRange(start, end);
+			if(value.length != document.getElementById("code").value.length) {
+				var el = document.getElementById("code");
+	 			var start = el.selectionStart,
+	        		end = el.selectionEnd;
+	      		el.value = value;
+	      		el.setSelectionRange(start, end);
+	      	}
     	});
 
     	String.prototype.splice = function(idx, rem, str) {
